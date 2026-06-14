@@ -1,27 +1,42 @@
 # World Cup Intelligence
 
-Dashboard interativo em HTML criado para portfólio, com foco em contar a história das Copas do Mundo por meio de números marcantes, comparações entre países e leitura visual clara.
+Dashboard interativo publicado na web com foco em análise histórica das Copas do Mundo. O projeto foi desenvolvido para transformar dados oficiais em uma narrativa visual clara, comparando países, artilheiros, edições marcantes e partidas históricas.
 
-## Visão geral
+## Acesse o dashboard
 
-O projeto transforma dados históricos da **Fjelstul World Cup Database** em um dashboard estático, publicável no GitHub Pages, com filtros por:
+**Link do projeto:**
 
-- categoria
-- ano / edição
-- Copa
-- seleção / país
+[https://brunogiacomelli1979-cyber.github.io/world-cup-intelligence-dashboard/](https://brunogiacomelli1979-cyber.github.io/world-cup-intelligence-dashboard/)
 
-O objetivo é destacar informações que realmente ajudam a entender a trajetória da competição ao longo do tempo.
+## Preview
+
+### Visão inicial do dashboard
+
+![Preview do dashboard - visão inicial](./assets/preview-01.png)
+
+### Visão com gráficos e comparações históricas
+
+![Preview do dashboard - gráficos e comparações](./assets/preview-02.png)
+
+## Sobre o projeto
+
+O dashboard foi desenhado como peça de portfólio para demonstrar habilidades em análise de dados, tratamento com Python/Pandas e construção de visualizações interativas em HTML. A proposta foi priorizar leitura simples, narrativa histórica e números realmente marcantes da competição, evitando excesso de indicadores genéricos.
+
+## Objetivos
+
+- contar a história das Copas do Mundo por meio de números e comparações relevantes;
+- destacar países campeões, artilharia histórica, edições mais goleadoras e jogos marcantes;
+- apresentar um dashboard estático, elegante e pronto para publicação no GitHub Pages;
+- demonstrar organização de projeto e comunicação visual aplicada a portfólio de dados.
 
 ## O que o dashboard mostra
 
-- evolução de gols, partidas e média por edição
-- países com mais títulos e mais finais
-- vitórias históricas por seleção
-- artilheiros(as) mais importantes
-- distribuição de gols por faixa de minuto
-- finais históricas
-- maiores goleadas
+- evolução de gols, partidas e média de gols por edição;
+- ranking de títulos por país;
+- artilheiros históricos da competição;
+- maiores goleadas registradas;
+- finais e jogos marcantes;
+- filtros por categoria, ano/edição, Copa e seleção/país.
 
 ## Fonte de dados
 
@@ -29,35 +44,17 @@ O objetivo é destacar informações que realmente ajudam a entender a trajetór
 - **Autor:** Joshua C. Fjelstul, Ph.D.
 - **Licença:** CC-BY-SA 4.0
 
-## Tratamento e metodologia
+## Metodologia e tratamento dos dados
 
-O projeto foi construído com **Python + Pandas** para preparação dos dados e **Apache ECharts** para visualização em HTML.
+O projeto foi construído com **Python + Pandas** para limpeza, padronização e agregação dos dados, e com **HTML, CSS, JavaScript e Apache ECharts** para a camada visual.
 
 Principais decisões de tratamento:
 
-- padronização das categorias em **Masculina** e **Feminina**
-- extração do ano da edição a partir do nome do torneio
-- criação de métricas derivadas, como:
-  - gols totais
-  - margem de vitória
-  - pontos por seleção
-  - taxa de vitórias
-- consolidação visual de **West Germany** em **Germany** nos gráficos por país
-- tratamento da Copa de **1950** como exceção histórica, já que o campeão foi definido pela rodada final
-
-## Estrutura sugerida para publicação
-
-```text
-world-cup-intelligence/
-├── index.html
-└── README.md
-```
-
-## Observações
-
-- O dashboard usa **ECharts via CDN**, então deve ser aberto com internet ativa.
-- O layout foi desenhado para funcionar bem em desktop e continuar legível em telas menores.
-- O projeto foi estruturado para servir como peça de portfólio, com foco em apresentação, clareza e narrativa analítica.
+- padronização das categorias em **Masculina** e **Feminina**;
+- extração do ano da edição a partir do nome do torneio;
+- criação de métricas derivadas, como gols totais, margem de vitória e estatísticas por seleção;
+- consolidação visual de **West Germany** em **Germany** nos gráficos por país;
+- tratamento da Copa de **1950** como exceção histórica, já que o campeão foi definido pela rodada final.
 
 ## Stack
 
@@ -67,7 +64,31 @@ world-cup-intelligence/
 - CSS
 - JavaScript
 - Apache ECharts
+- GitHub Pages
 
-## Licença e crédito da base
+## Estrutura do projeto
 
-Ao publicar ou reaproveitar este projeto, mantenha o crédito da base original conforme a licença CC-BY-SA 4.0.
+```text
+world-cup-intelligence-dashboard/
+├── index.html
+├── README.md
+└── assets/
+    ├── preview-01.png
+    └── preview-02.png
+```
+
+## Publicação
+
+O projeto está publicado em formato web via **GitHub Pages**, permitindo acesso direto ao dashboard sem necessidade de backend.
+
+## Observações
+
+- o dashboard utiliza **ECharts via CDN**, então deve ser acessado com internet ativa;
+- o layout foi pensado para boa leitura em desktop;
+- o foco do projeto é portfólio, comunicação visual e interpretação analítica dos dados.
+
+## Autor
+
+**Bruno Giacomelli**
+
+Projeto desenvolvido como parte da construção de portfólio em Data Analytics.
