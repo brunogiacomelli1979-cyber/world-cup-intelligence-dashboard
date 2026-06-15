@@ -1,81 +1,56 @@
-# World Cup Intelligence
+# World Cup Intelligence Dashboard
 
-Dashboard interativo publicado na web com foco em análise histórica das Copas do Mundo. O projeto foi desenvolvido para transformar dados oficiais em uma narrativa visual clara, comparando países, artilheiros, edições marcantes e partidas históricas.
+Dashboard interativo para contar a história das Copas do Mundo através dos números.
 
-## Acesse o dashboard
+O projeto combina dados masculinos e femininos da Fjelstul World Cup Database para explorar edições, gols, seleções, jogadores, finais, pênaltis, cartões, sedes, estádios e outras camadas históricas da competição.
 
-**Link do projeto:**
-
+**Dashboard publicado:**  
 [https://brunogiacomelli1979-cyber.github.io/world-cup-intelligence-dashboard/](https://brunogiacomelli1979-cyber.github.io/world-cup-intelligence-dashboard/)
 
-## Preview
+## O que mudou nesta versão
 
-### Visão inicial do dashboard
+- Cobertura ampliada para 31 torneios oficiais, de 1930 a 2023.
+- Uso dos 27 arquivos CSV curados disponíveis na base completa.
+- Separação entre HTML, CSS, JavaScript, dados e scripts de geração.
+- Novo arquivo analítico `data/dashboard-data.json`, gerado automaticamente.
+- Novas abas: linha do tempo, seleções, jogadores, jogos e drama, disciplina, sedes e metodologia.
+- Novos índices narrativos, incluindo índice de drama e índice de protagonismo de jogadores.
+- Correção de encoding dos textos em português.
+- Validação básica dos dados antes da publicação.
 
-![Preview do dashboard - visão inicial](./assets/preview-01.png)
+## Números da base
 
-### Visão com gráficos e comparações históricas
+- 31 torneios
+- 22 Copas masculinas
+- 9 Copas femininas
+- 1.312 partidas
+- 3.801 gols
+- 10.912 jogadores
+- 29.334 aparições de jogadores
+- 11.210 substituições
+- 3.292 cartões
+- 251 estádios
 
-![Preview do dashboard - gráficos e comparações](./assets/preview-02.png)
+## Experiência do dashboard
 
-## Sobre o projeto
+O dashboard foi desenhado para funcionar como um atlas analítico das Copas:
 
-O dashboard foi desenhado como peça de portfólio para demonstrar habilidades em análise de dados, tratamento com Python/Pandas e construção de visualizações interativas em HTML. A proposta foi priorizar leitura simples, narrativa histórica e números realmente marcantes da competição, evitando excesso de indicadores genéricos.
+- **Visão geral:** evolução de gols, partidas, média de gols e títulos.
+- **Linha do tempo:** expansão das edições e índice de drama.
+- **Seleções:** potências históricas e tabela consolidada.
+- **Jogadores:** artilharia e protagonismo.
+- **Jogos & drama:** goleadas, pênaltis, prorrogações e jogos decisivos.
+- **Disciplina:** cartões por edição e distribuição dos gols por minuto.
+- **Sedes:** estádios mais presentes e campanha dos anfitriões.
+- **Metodologia:** fonte, regras de cálculo e reprodutibilidade.
 
-## Objetivos
-
-- contar a história das Copas do Mundo por meio de números e comparações relevantes;
-- destacar países campeões, artilharia histórica, edições mais goleadoras e jogos marcantes;
-- apresentar um dashboard estático, elegante e pronto para publicação no GitHub Pages;
-- demonstrar organização de projeto e comunicação visual aplicada a portfólio de dados.
-
-## O que o dashboard mostra
-
-- evolução de gols, partidas e média de gols por edição;
-- ranking de títulos por país;
-- artilheiros históricos da competição;
-- maiores goleadas registradas;
-- finais e jogos marcantes;
-- filtros por categoria, ano/edição, Copa e seleção/país.
-
-## Fonte de dados
+## Fonte dos dados
 
 - **Base:** Fjelstul World Cup Database
 - **Autor:** Joshua C. Fjelstul, Ph.D.
 - **Licença:** CC-BY-SA 4.0
 
-## Base de dados
-
-Os arquivos utilizados no projeto estão disponíveis na pasta `data/`.
-
-- matches.csv
-- goals.csv
-- teams.csv
-- penalty_kicks.csv
-- bookings.csv
-- tournament_stages.csv
-
-## Metodologia e tratamento dos dados
-
-O projeto foi construído com **Python + Pandas** para limpeza, padronização e agregação dos dados, e com **HTML, CSS, JavaScript e Apache ECharts** para a camada visual.
-
-Principais decisões de tratamento:
-
-- padronização das categorias em **Masculina** e **Feminina**;
-- extração do ano da edição a partir do nome do torneio;
-- criação de métricas derivadas, como gols totais, margem de vitória e estatísticas por seleção;
-- consolidação visual de **West Germany** em **Germany** nos gráficos por país;
-- tratamento da Copa de **1950** como exceção histórica, já que o campeão foi definido pela rodada final.
-
-## Stack
-
-- Python
-- Pandas
-- HTML
-- CSS
-- JavaScript
-- Apache ECharts
-- GitHub Pages
+Este projeto deriva da base original e preserva a atribuição exigida pela licença. Consulte `data/LICENSE_SOURCE.txt` para o texto de licença da fonte utilizada.
 
 ## Estrutura do projeto
 
@@ -83,23 +58,67 @@ Principais decisões de tratamento:
 world-cup-intelligence-dashboard/
 ├── index.html
 ├── README.md
-└── assets/
-    ├── preview-01.png
-    └── preview-02.png
+├── assets/
+│   ├── app.js
+│   ├── styles.css
+│   ├── preview-01.png
+│   └── preview-02.png
+├── data/
+│   ├── dashboard-data.json
+│   ├── LICENSE_SOURCE.txt
+│   └── curated/
+│       └── *_curated.csv
+└── scripts/
+    ├── build_dashboard_data.py
+    └── validate_dashboard_data.py
 ```
 
-## Publicação
+## Como reproduzir
 
-O projeto está publicado em formato web via **GitHub Pages**, permitindo acesso direto ao dashboard sem necessidade de backend.
+Regenere o arquivo analítico:
 
-## Observações
+```bash
+python scripts/build_dashboard_data.py
+```
 
-- o dashboard utiliza **ECharts via CDN**, então deve ser acessado com internet ativa;
-- o layout foi pensado para boa leitura em desktop;
-- o foco do projeto é portfólio, comunicação visual e interpretação analítica dos dados.
+Valide os principais totais e vínculos:
+
+```bash
+python scripts/validate_dashboard_data.py
+```
+
+Sirva localmente para testar o carregamento do JSON:
+
+```bash
+python -m http.server 8000
+```
+
+Depois acesse:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Metodologia resumida
+
+- As categorias são padronizadas como **Masculina** e **Feminina**.
+- **West Germany** é consolidada visualmente como **Germany**.
+- Campeões e vice-campeões vêm de `tournament_standings_curated.csv`, o que trata corretamente a exceção histórica de 1950.
+- A artilharia exclui gols contra.
+- O índice de drama combina pênaltis, prorrogações, jogos eliminatórios apertados e partidas de alta pontuação.
+- O índice de protagonismo de jogadores combina aparições, titularidades, gols e longevidade em torneios.
+
+## Stack
+
+- Python
+- HTML
+- CSS
+- JavaScript
+- Apache ECharts
+- GitHub Pages
 
 ## Autor
 
 **Bruno Giacomelli**
 
-Projeto desenvolvido como parte da construção de portfólio em Data Analytics.
+Projeto desenvolvido como peça de portfólio em Data Analytics, com foco em narrativa histórica, curadoria de dados e visualização interativa.
