@@ -44,6 +44,17 @@ O dashboard foi desenhado como peça de portfólio para demonstrar habilidades e
 - **Autor:** Joshua C. Fjelstul, Ph.D.
 - **Licença:** CC-BY-SA 4.0
 
+## Base de dados
+
+Os arquivos utilizados no projeto estão disponíveis na pasta `data/`.
+
+- matches.csv
+- goals.csv
+- teams.csv
+- penalty_kicks.csv
+- bookings.csv
+- tournament_stages.csv
+
 ## Metodologia e tratamento dos dados
 
 O projeto foi construído com **Python + Pandas** para limpeza, padronização e agregação dos dados, e com **HTML, CSS, JavaScript e Apache ECharts** para a camada visual.
