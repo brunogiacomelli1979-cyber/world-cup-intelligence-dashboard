@@ -30,6 +30,7 @@ Este projeto usa os arquivos curados em `data/curated/` e gera um arquivo otimiz
 | Aproveitamento | `vitórias / jogos` por seleção. |
 | Saldo de gols | `gols pró - gols contra` por seleção. |
 | Índice de drama | Soma ponderada de pênaltis, prorrogações, jogos eliminatórios com margem mínima e partidas com pelo menos cinco gols. |
+| Índice de força histórica | Pontuação visual para seleções: títulos, vices, vitórias, saldo de gols e participações em Copas. |
 | Índice de protagonismo | Combinação de aparições, titularidades, gols e quantidade de torneios disputados. |
 
 ## Convenções

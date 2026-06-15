@@ -1,6 +1,7 @@
 const charts = {};
 let DATA = null;
 let state = { category: "Todos", tournament: "Todos", team: "Todos" };
+const DATA_VERSION = "20260615b";
 
 const colors = ["#34d4bd", "#64a8ff", "#fb7185", "#f8c14f", "#a88bff", "#7ddf8a"];
 const minuteOrder = ["0-15", "16-30", "31-45", "45+", "46-60", "61-75", "76-90", "90+"];
@@ -206,6 +207,68 @@ function renderStory(s) {
   `).join("");
 }
 
+function renderHistoryInsights(s) {
+  const mostGoals = s.tournaments.slice().sort(byNumber("goals"))[0];
+  const highestAvg = s.tournaments.slice().sort(byNumber("goals_per_match"))[0];
+  const mostDrama = s.tournaments.slice().sort(byNumber("drama_index"))[0];
+  const topTeam = s.teams.slice().sort((a, b) => teamPowerScore(b) - teamPowerScore(a))[0];
+  const topPlayer = s.players[0];
+  const hostWins = s.tournaments.filter(row => row.host_won).length;
+  const women = DATA.tournaments.filter(row => row.category === "Feminina");
+  const womenGrowth = women.length
+    ? `${women[0].teams} seleções em ${women[0].year} para ${women[women.length - 1].teams} em ${women[women.length - 1].year}`
+    : "sem recorte feminino";
+  const insights = [
+    [
+      "Era ofensiva",
+      highestAvg ? `${highestAvg.year}: ${dec(highestAvg.goals_per_match, 2)} gols/jogo` : "-",
+      highestAvg ? `A edição de ${highestAvg.year} mostra o pico de ritmo ofensivo no recorte, acima do volume bruto de gols.` : "Sem dados."
+    ],
+    [
+      "Copa de maior volume",
+      mostGoals ? `${mostGoals.goals} gols` : "-",
+      mostGoals ? `${mostGoals.name} lidera em gols totais, influenciada pelo tamanho do torneio e pelo formato.` : "Sem dados."
+    ],
+    [
+      "Potência dominante",
+      topTeam ? topTeam.team : "-",
+      topTeam ? `${topTeam.titles} títulos, ${topTeam.finals} finais e ${topTeam.wins} vitórias sustentam sua posição histórica.` : "Sem dados."
+    ],
+    [
+      "Protagonista",
+      topPlayer ? topPlayer.player : "-",
+      topPlayer ? `${topPlayer.team}: ${topPlayer.goals} gols, ${topPlayer.appearances} jogos e ${topPlayer.tournaments} Copas.` : "Sem dados."
+    ],
+    [
+      "Drama competitivo",
+      mostDrama ? `${mostDrama.year}` : "-",
+      mostDrama ? `${mostDrama.name} concentra sinais de tensão: pênaltis, prorrogações, jogos apertados e placares altos.` : "Sem dados."
+    ],
+    [
+      "Força da sede",
+      `${hostWins} títulos`,
+      "A relação entre anfitriões e campeões ajuda a medir quando jogar em casa virou vantagem ou pressão histórica."
+    ],
+    [
+      "Copa Feminina",
+      womenGrowth,
+      "A expansão feminina é uma das histórias centrais da base: mais seleções, mais jogos e maior densidade competitiva."
+    ],
+    [
+      "Memória dos jogos",
+      `${fmt(s.biggestMatches.length)} recortes`,
+      "Goleadas, finais, pênaltis e prorrogações ajudam a separar volume estatístico de memória esportiva."
+    ]
+  ];
+  document.getElementById("historyInsights").innerHTML = insights.map(([label, value, text]) => `
+    <article class="insight-card">
+      <span>${label}</span>
+      <strong>${value}</strong>
+      <p>${text}</p>
+    </article>
+  `).join("");
+}
+
 function renderEvolution(s) {
   if (!s.tournaments.length) return setEmpty("chartEvolution");
   const rows = s.tournaments.slice().sort((a, b) => a.year - b.year);
@@ -267,19 +330,32 @@ function renderDramaIndex(s) {
 }
 
 function renderTeamPower(s) {
-  const rows = s.teams.slice().sort((a, b) => (b.titles - a.titles) || (b.finals - a.finals) || (b.wins - a.wins)).slice(0, 12).reverse();
+  const rows = s.teams.slice().sort((a, b) => teamPowerScore(b) - teamPowerScore(a)).slice(0, 12).reverse();
   if (!rows.length) return setEmpty("chartTeamPower");
   chart("chartTeamPower").setOption({
     ...baseGrid(),
     grid: { left: 120, right: 28, top: 52, bottom: 34 },
     xAxis: { ...baseGrid().xAxis, type: "value" },
     yAxis: { ...baseGrid().yAxis, type: "category", data: rows.map(row => row.team) },
-    series: [
-      { name: "Títulos", type: "bar", stack: "total", data: rows.map(row => row.titles) },
-      { name: "Vices", type: "bar", stack: "total", data: rows.map(row => row.runner_up) },
-      { name: "Vitórias (÷10)", type: "bar", stack: "total", data: rows.map(row => +(row.wins / 10).toFixed(1)) }
-    ]
+    series: [{
+      name: "Força histórica",
+      type: "bar",
+      data: rows.map(row => +teamPowerScore(row).toFixed(1)),
+      label: {
+        show: true,
+        position: "right",
+        color: "#edf5ff",
+        formatter: params => {
+          const row = rows[params.dataIndex];
+          return `${row.titles}T · ${row.finals}F · ${row.wins}V`;
+        }
+      }
+    }]
   }, true);
+}
+
+function teamPowerScore(row) {
+  return row.titles * 30 + row.runner_up * 15 + row.wins * 0.35 + row.goal_diff * 0.08 + row.tournaments * 0.8;
 }
 
 function renderScorers(s) {
@@ -318,14 +394,11 @@ function renderCards(s) {
       textStyle: { color: "#edf5ff" }
     },
     xAxis: { ...baseGrid().xAxis, type: "category", data: rows.map(row => row.year) },
-    yAxis: [
-      { ...baseGrid().yAxis, type: "value", name: "Amarelos" },
-      { ...baseGrid().yAxis, type: "value", name: "Vermelhos" }
-    ],
+    yAxis: { ...baseGrid().yAxis, type: "value" },
     series: [
       { name: "Amarelos", type: "bar", data: rows.map(row => row.yellows), barMaxWidth: 24 },
-      { name: "Vermelhos diretos", type: "line", smooth: true, yAxisIndex: 1, data: rows.map(row => row.reds) },
-      { name: "2º amarelo", type: "line", smooth: true, yAxisIndex: 1, data: rows.map(row => row.second_yellows) }
+      { name: "Vermelhos diretos", type: "bar", stack: "reds", data: rows.map(row => row.reds), barMaxWidth: 14 },
+      { name: "2º amarelo", type: "bar", stack: "reds", data: rows.map(row => row.second_yellows), barMaxWidth: 14 }
     ]
   }, true);
 }
@@ -402,6 +475,16 @@ function renderTables(s) {
     { label: "Sede campeã?", key: "host_won", format: value => value ? "sim" : "não" }
   ], s.hosts.slice().sort((a, b) => a.year - b.year));
 
+  renderTable("tablePlayers", [
+    { label: "Jogador(a)", key: "player" },
+    { label: "Seleção", key: "team" },
+    { label: "Copas", key: "tournaments", num: true },
+    { label: "Jogos", key: "appearances", num: true },
+    { label: "Titular", key: "starts", num: true },
+    { label: "Gols", key: "goals", num: true },
+    { label: "Índice", key: "impact_score", num: true, format: value => dec(value, 1) }
+  ], s.players.slice(0, 35));
+
   renderTable("tableSources", [
     { label: "Arquivo", key: "file" },
     { label: "Uso no dashboard", key: "use" }
@@ -421,6 +504,7 @@ function renderAll() {
   const s = scope();
   renderMetricCards(s);
   renderStory(s);
+  renderHistoryInsights(s);
   renderEvolution(s);
   renderTitles(s);
   renderEra(s);
@@ -475,7 +559,7 @@ function wireTabs() {
 
 async function init() {
   try {
-    const response = await fetch("data/dashboard-data.json");
+    const response = await fetch(`data/dashboard-data.json?v=${DATA_VERSION}`);
     DATA = await response.json();
     populateFilters();
     wireTabs();

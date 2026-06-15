@@ -204,6 +204,48 @@ select {
   line-height: 1.5;
 }
 
+.narrative-panel {
+  margin-top: 16px;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.insight-card {
+  border: 1px solid rgba(49, 90, 128, .65);
+  background: rgba(8, 19, 31, .6);
+  padding: 16px;
+  min-height: 150px;
+}
+
+.insight-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.insight-card strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.insight-card p {
+  margin: 0;
+  color: var(--soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -334,6 +376,7 @@ code {
   .grid.two { grid-template-columns: 1fr; }
   .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .story-grid,
+  .insight-grid,
   .method-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -348,6 +391,7 @@ code {
   .metrics,
   .filters,
   .story-grid,
+  .insight-grid,
   .method-grid { grid-template-columns: 1fr; }
   h1 { font-size: 44px; }
   .lede { font-size: 16px; }
