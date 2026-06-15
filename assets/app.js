@@ -1,7 +1,7 @@
-const charts = {};
+﻿const charts = {};
 let DATA = null;
 let state = { category: "Todos", tournament: "Todos", team: "Todos" };
-const DATA_VERSION = "20260615b";
+const DATA_VERSION = "20260615c";
 
 const colors = ["#34d4bd", "#64a8ff", "#fb7185", "#f8c14f", "#a88bff", "#7ddf8a"];
 const minuteOrder = ["0-15", "16-30", "31-45", "45+", "46-60", "61-75", "76-90", "90+"];
@@ -269,6 +269,159 @@ function renderHistoryInsights(s) {
   `).join("");
 }
 
+function renderStoryMode(s) {
+  const first = s.tournaments.slice().sort((a, b) => a.year - b.year)[0];
+  const last = s.tournaments.slice().sort((a, b) => b.year - a.year)[0];
+  const topTeam = s.teams.slice().sort((a, b) => teamPowerScore(b) - teamPowerScore(a))[0];
+  const topPlayer = s.players[0];
+  const topDrama = s.tournaments.slice().sort(byNumber("drama_index"))[0];
+  const totalGoals = s.tournaments.reduce((sum, row) => sum + row.goals, 0);
+  const totalMatches = s.tournaments.reduce((sum, row) => sum + row.matches, 0);
+  const title = state.team !== "Todos"
+    ? `${state.team}: uma biografia pelas Copas`
+    : state.category === "Feminina"
+      ? "A ascensão da Copa Feminina em números"
+      : state.category === "Masculina"
+        ? "Quase um século de Copa Masculina em números"
+        : "De 1930 a 2023: expansão, domínio, lendas e drama";
+
+  document.getElementById("mainStory").innerHTML = `
+    <div>
+      <p class="eyebrow">Modo histórias</p>
+      <h2>${title}</h2>
+      <p>${storyLead(s, first, last, topTeam, topPlayer, topDrama)}</p>
+    </div>
+    <div class="feature-stat">
+      <div><span>Período</span><strong>${first ? first.year : "-"}-${last ? last.year : "-"}</strong></div>
+      <div><span>Volume</span><strong>${fmt(totalGoals)} gols</strong></div>
+      <div><span>Ritmo</span><strong>${dec(totalGoals / Math.max(totalMatches, 1), 2)} gols/jogo</strong></div>
+    </div>
+  `;
+
+  const chapters = [
+    ["Expansão", "O torneio cresceu", first && last ? `De ${first.teams} seleções em ${first.year} para ${last.teams} em ${last.year}, a Copa virou uma vitrine global cada vez maior.` : "Sem dados suficientes."],
+    ["Domínio", topTeam ? topTeam.team : "-", topTeam ? `${topTeam.team} combina títulos, finais, vitórias e saldo para aparecer como potência do recorte.` : "Sem dados suficientes."],
+    ["Lendas", topPlayer ? topPlayer.player : "-", topPlayer ? `${topPlayer.player} (${topPlayer.team}) lidera o índice de protagonismo: gols, jogos, titularidade e longevidade.` : "Sem dados suficientes."],
+    ["Drama", topDrama ? `${topDrama.year}` : "-", topDrama ? `${topDrama.name} concentra pênaltis, prorrogações, margens curtas e jogos de alta pontuação.` : "Sem dados suficientes."]
+  ];
+  document.getElementById("storyChapters").innerHTML = chapters.map(([label, value, text]) => `
+    <article class="chapter-card">
+      <span>${label}</span>
+      <strong>${value}</strong>
+      <p>${text}</p>
+    </article>
+  `).join("");
+}
+
+function storyLead(s, first, last, topTeam, topPlayer, topDrama) {
+  if (state.team !== "Todos" && topTeam) {
+    return `${state.team} aparece aqui como personagem histórico: ${topTeam.matches} jogos, ${topTeam.wins} vitórias, ${topTeam.goals_for} gols e ${topTeam.titles} títulos no recorte. A leitura combina resultado, presença e impacto competitivo.`;
+  }
+  if (state.category === "Feminina") {
+    return `A Copa Feminina mostra uma história de aceleração: expansão de participantes, consolidação de potências e protagonistas que mudaram a escala do torneio. Os números ajudam a enxergar essa evolução sem reduzir a competição a uma comparação com o masculino.`;
+  }
+  if (state.category === "Masculina") {
+    return `A Copa Masculina percorre eras muito diferentes: torneios curtos e ofensivos no início, expansão global no fim do século XX e edições recentes marcadas por equilíbrio, pênaltis e profundidade competitiva.`;
+  }
+  return `A base une Copas masculinas e femininas para contar uma história maior: o torneio se expandiu, criou dinastias, revelou lendas e acumulou jogos que viraram memória coletiva. O objetivo aqui é transformar estatísticas em capítulos de futebol.`;
+}
+
+function renderTeamLegends(s) {
+  const rows = s.teams.slice().sort((a, b) => teamPowerScore(b) - teamPowerScore(a)).slice(0, 8);
+  document.getElementById("teamLegendCards").innerHTML = rows.map(team => `
+    <article class="legend-card">
+      <span>${teamArchetype(team)}</span>
+      <strong>${team.team}</strong>
+      <p>${teamNarrative(team)}</p>
+      <div class="mini-row">
+        <b>${team.titles} títulos</b>
+        <b>${team.finals} finais</b>
+        <b>${team.wins} vitórias</b>
+      </div>
+    </article>
+  `).join("");
+}
+
+function teamArchetype(team) {
+  if (team.titles >= 5) return "dinastia";
+  if (team.finals >= 8) return "regularidade";
+  if (team.win_rate >= 58) return "eficiência";
+  if (team.goal_diff >= 80) return "força ofensiva";
+  if (team.titles > 0) return "campeã histórica";
+  return "presença global";
+}
+
+function teamNarrative(team) {
+  if (team.team === "Brazil") return "O Brasil aparece como símbolo de conquista: muitos títulos, ataque forte e presença permanente no imaginário da Copa.";
+  if (team.team === "Germany") return "A Alemanha representa consistência: finais, vitórias e saldo sustentam uma das trajetórias mais estáveis da história.";
+  if (team.team === "United States") return "Os Estados Unidos explicam boa parte da história da Copa Feminina, com títulos, finais e força competitiva recorrente.";
+  if (team.team === "Argentina") return "A Argentina combina eras de genialidade, finais marcantes e títulos que atravessam diferentes gerações.";
+  if (team.team === "Italy") return "A Itália é a potência da eficiência histórica: poucos detalhes, muito resultado e campanhas que viraram referência.";
+  if (team.team === "France") return "A França aparece como ponte entre tradição e modernidade, com títulos recentes e grande presença em jogos decisivos.";
+  return `${team.team} soma ${team.matches} jogos, ${team.goals_for} gols e saldo ${team.goal_diff}, uma assinatura própria dentro da história das Copas.`;
+}
+
+function renderPlayerLegends(s) {
+  const rows = s.players.slice(0, 8);
+  document.getElementById("playerLegendCards").innerHTML = rows.map(player => `
+    <article class="legend-card">
+      <span>${playerArchetype(player)}</span>
+      <strong>${player.player}</strong>
+      <p>${playerNarrative(player)}</p>
+      <div class="mini-row">
+        <b>${player.goals} gols</b>
+        <b>${player.appearances} jogos</b>
+        <b>${player.tournaments} Copas</b>
+      </div>
+    </article>
+  `).join("");
+}
+
+function playerArchetype(player) {
+  if (player.goals >= 15) return "artilharia lendária";
+  if (player.tournaments >= 5) return "longevidade";
+  if (player.appearances >= 25) return "presença histórica";
+  if (player.starts >= 20) return "protagonismo";
+  return "impacto";
+}
+
+function playerNarrative(player) {
+  if (player.player === "Marta") return "Marta é a régua máxima da artilharia em Copas: atravessou gerações e fez da longevidade parte do legado.";
+  if (player.player === "Miroslav Klose") return "Klose transformou regularidade em recorde: gols distribuídos por várias edições e peso decisivo para a Alemanha.";
+  if (player.player === "Ronaldo") return "Ronaldo simboliza explosão e decisão: seus gols ligam redenção, domínio brasileiro e memória popular.";
+  if (player.player === "Lionel Messi") return "Messi combina longevidade, criação e decisão, coroando a trajetória com protagonismo em múltiplas Copas.";
+  if (player.player === "Abby Wambach") return "Wambach é uma das grandes referências da força ofensiva dos Estados Unidos na Copa Feminina.";
+  if (player.player === "Birgit Prinz") return "Prinz traduz a potência alemã no futebol feminino: presença, gols e campanhas profundas.";
+  return `${player.player} aparece pelo equilíbrio entre ${player.goals} gols, ${player.appearances} jogos e ${player.tournaments} Copas disputadas por ${player.team}.`;
+}
+
+function renderGenderCompare() {
+  const rows = ["Masculina", "Feminina"].map(category => {
+    const tournaments = DATA.tournaments.filter(row => row.category === category);
+    return {
+      category,
+      tournaments: tournaments.length,
+      matches: tournaments.reduce((sum, row) => sum + row.matches, 0),
+      goals: tournaments.reduce((sum, row) => sum + row.goals, 0),
+      avg: +(tournaments.reduce((sum, row) => sum + row.goals, 0) / Math.max(tournaments.reduce((sum, row) => sum + row.matches, 0), 1)).toFixed(2),
+      teams_latest: tournaments.slice().sort((a, b) => b.year - a.year)[0]?.teams || 0
+    };
+  });
+  chart("chartGenderCompare").setOption({
+    ...baseGrid(),
+    xAxis: { ...baseGrid().xAxis, type: "category", data: rows.map(row => row.category) },
+    yAxis: [
+      { ...baseGrid().yAxis, type: "value", name: "Volume" },
+      { ...baseGrid().yAxis, type: "value", name: "Média" }
+    ],
+    series: [
+      { name: "Torneios", type: "bar", data: rows.map(row => row.tournaments), barMaxWidth: 24 },
+      { name: "Última edição: seleções", type: "bar", data: rows.map(row => row.teams_latest), barMaxWidth: 24 },
+      { name: "Gols/jogo", type: "line", yAxisIndex: 1, data: rows.map(row => row.avg) }
+    ]
+  }, true);
+}
+
 function renderEvolution(s) {
   if (!s.tournaments.length) return setEmpty("chartEvolution");
   const rows = s.tournaments.slice().sort((a, b) => a.year - b.year);
@@ -485,6 +638,13 @@ function renderTables(s) {
     { label: "Índice", key: "impact_score", num: true, format: value => dec(value, 1) }
   ], s.players.slice(0, 35));
 
+  renderTable("tableIconicCups", [
+    { label: "Leitura", key: "metric" },
+    { label: "Copa", key: "cup" },
+    { label: "Valor", key: "value", num: true },
+    { label: "Por que importa", key: "meaning" }
+  ], iconicCupRows(s));
+
   renderTable("tableSources", [
     { label: "Arquivo", key: "file" },
     { label: "Uso no dashboard", key: "use" }
@@ -500,21 +660,75 @@ function renderTables(s) {
   ]);
 }
 
+function iconicCupRows(s) {
+  const rows = s.tournaments;
+  if (!rows.length) return [];
+  const by = key => rows.slice().sort((a, b) => (b[key] || 0) - (a[key] || 0))[0];
+  const mostGoals = by("goals");
+  const highestAvg = by("goals_per_match");
+  const mostDrama = by("drama_index");
+  const mostCards = by("cards");
+  const mostTeams = by("teams");
+  const mostShootouts = by("shootouts");
+  return [
+    {
+      metric: "Mais goleadora",
+      cup: `${mostGoals.year} · ${mostGoals.name}`,
+      value: mostGoals.goals,
+      meaning: "Mostra o maior volume ofensivo absoluto da base."
+    },
+    {
+      metric: "Maior média de gols",
+      cup: `${highestAvg.year} · ${highestAvg.name}`,
+      value: dec(highestAvg.goals_per_match, 2),
+      meaning: "Ajuda a comparar ritmos entre formatos de tamanhos diferentes."
+    },
+    {
+      metric: "Mais dramática",
+      cup: `${mostDrama.year} · ${mostDrama.name}`,
+      value: mostDrama.drama_index,
+      meaning: "Combina pênaltis, prorrogações, margens curtas e placares altos."
+    },
+    {
+      metric: "Mais disciplinar",
+      cup: `${mostCards.year} · ${mostCards.name}`,
+      value: mostCards.cards,
+      meaning: "Edição com maior concentração de registros disciplinares."
+    },
+    {
+      metric: "Maior expansão",
+      cup: `${mostTeams.year} · ${mostTeams.name}`,
+      value: mostTeams.teams,
+      meaning: "Representa o crescimento do torneio como competição global."
+    },
+    {
+      metric: "Mais pênaltis",
+      cup: `${mostShootouts.year} · ${mostShootouts.name}`,
+      value: mostShootouts.shootouts,
+      meaning: "Sinal de equilíbrio em jogos eliminatórios e decisões no limite."
+    }
+  ];
+}
+
 function renderAll() {
   const s = scope();
   renderMetricCards(s);
   renderStory(s);
   renderHistoryInsights(s);
+  renderStoryMode(s);
   renderEvolution(s);
   renderTitles(s);
   renderEra(s);
   renderDramaIndex(s);
   renderTeamPower(s);
+  renderTeamLegends(s);
   renderScorers(s);
   renderPlayerImpact(s);
+  renderPlayerLegends(s);
   renderCards(s);
   renderMinutes(s);
   renderStadiums(s);
+  renderGenderCompare();
   renderTables(s);
   setTimeout(() => Object.values(charts).forEach(item => item.resize()), 40);
 }

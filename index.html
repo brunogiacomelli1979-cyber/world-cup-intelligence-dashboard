@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -56,6 +56,7 @@
 
       <nav class="tabs" aria-label="Seções do dashboard">
         <button class="tab active" data-tab="overview">Visão geral</button>
+        <button class="tab" data-tab="stories">Histórias</button>
         <button class="tab" data-tab="timeline">Linha do tempo</button>
         <button class="tab" data-tab="teams">Seleções</button>
         <button class="tab" data-tab="players">Jogadores</button>
@@ -89,6 +90,27 @@
           </div>
           <div class="insight-grid" id="historyInsights"></div>
         </article>
+      </section>
+
+      <section class="view" id="view-stories">
+        <article class="feature-story" id="mainStory"></article>
+        <div class="chapter-grid" id="storyChapters"></div>
+        <div class="grid two story-support">
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Copas mais marcantes</h3>
+              <p>Ranking editorial por volume, drama, ataque, disciplina e expansão.</p>
+            </div>
+            <div class="table-wrap"><table id="tableIconicCups"></table></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <h3>Duas histórias, uma competição global</h3>
+              <p>Comparação entre Copas masculinas e femininas dentro da base.</p>
+            </div>
+            <div class="chart tall" id="chartGenderCompare"></div>
+          </article>
+        </div>
       </section>
 
       <section class="view" id="view-timeline">
@@ -127,6 +149,13 @@
             <div class="table-wrap"><table id="tableTeams"></table></div>
           </article>
         </div>
+        <article class="panel narrative-panel">
+          <div class="panel-head">
+            <h3>Perfis das maiores seleções</h3>
+            <p>Uma leitura curta sobre os times que moldaram a memória das Copas.</p>
+          </div>
+          <div class="legend-grid" id="teamLegendCards"></div>
+        </article>
       </section>
 
       <section class="view" id="view-players">
@@ -151,6 +180,7 @@
             <h3>Hall de protagonistas</h3>
             <p>Jogadores e jogadoras com maior combinação de gols, jogos, titularidade e longevidade.</p>
           </div>
+          <div class="legend-grid" id="playerLegendCards"></div>
           <div class="table-wrap"><table id="tablePlayers"></table></div>
         </article>
       </section>
@@ -229,7 +259,7 @@
             </div>
             <div>
               <h4>Índices autorais</h4>
-              <p>O índice de drama mede tensão competitiva. O índice de força histórica combina títulos, vices, vitórias, saldo de gols e presença em Copas.</p>
+              <p>O índice de drama mede tensão competitiva. O índice de força histórica combina títulos, vices, vitórias, saldo de gols e presença em Copas. O protagonismo combina gols, jogos, titularidade e longevidade.</p>
             </div>
             <div>
               <h4>Reprodutibilidade</h4>
@@ -241,6 +271,6 @@
       </section>
     </main>
   </div>
-  <script src="assets/app.js?v=20260615b"></script>
+  <script src="assets/app.js?v=20260615c"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Data Dictionary
+﻿# Data Dictionary
 
 Este projeto usa os arquivos curados em `data/curated/` e gera um arquivo otimizado para a interface em `data/dashboard-data.json`.
 

@@ -1,4 +1,4 @@
-# World Cup Intelligence Dashboard
+﻿# World Cup Intelligence Dashboard
 
 Dashboard interativo para contar a história das Copas do Mundo através dos números.
 
@@ -14,6 +14,7 @@ O projeto combina dados masculinos e femininos da Fjelstul World Cup Database pa
 - Separação entre HTML, CSS, JavaScript, dados e scripts de geração.
 - Novo arquivo analítico `data/dashboard-data.json`, gerado automaticamente.
 - Novas abas: linha do tempo, seleções, jogadores, jogos e drama, disciplina, sedes e metodologia.
+- Nova aba **Histórias**, com capítulos editoriais sobre expansão, domínio, lendas, drama e comparação masculino x feminino.
 - Novos índices narrativos, incluindo índice de drama e índice de protagonismo de jogadores.
 - Correção de encoding dos textos em português.
 - Validação básica dos dados antes da publicação.
@@ -36,9 +37,10 @@ O projeto combina dados masculinos e femininos da Fjelstul World Cup Database pa
 O dashboard foi desenhado para funcionar como um atlas analítico das Copas:
 
 - **Visão geral:** evolução de gols, partidas, média de gols e títulos.
+- **Histórias:** capítulos narrativos, Copas marcantes e comparação masculino x feminino.
 - **Linha do tempo:** expansão das edições e índice de drama.
 - **Seleções:** potências históricas e tabela consolidada.
-- **Jogadores:** artilharia e protagonismo.
+- **Jogadores:** artilharia, protagonismo e hall de lendas.
 - **Jogos & drama:** goleadas, pênaltis, prorrogações e jogos decisivos.
 - **Disciplina:** cartões por edição e distribuição dos gols por minuto.
 - **Sedes:** estádios mais presentes e campanha dos anfitriões.
@@ -106,6 +108,7 @@ http://127.0.0.1:8000
 - Campeões e vice-campeões vêm de `tournament_standings_curated.csv`, o que trata corretamente a exceção histórica de 1950.
 - A artilharia exclui gols contra.
 - O índice de drama combina pênaltis, prorrogações, jogos eliminatórios apertados e partidas de alta pontuação.
+- O índice de força histórica combina títulos, vices, vitórias, saldo de gols e participações.
 - O índice de protagonismo de jogadores combina aparições, titularidades, gols e longevidade em torneios.
 
 ## Stack
