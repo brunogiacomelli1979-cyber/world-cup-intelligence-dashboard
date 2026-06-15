@@ -250,7 +250,7 @@ def build():
         meta = tournament_meta[row["tournament_id"]]
         team = clean_country(row.get("team_name", ""))
         key = (meta["category"], team)
-        team_metrics[key]["cards"] += num(row.get("yellow_card")) + num(row.get("red_card")) + num(row.get("second_yellow_card"))
+        team_metrics[key]["cards"] += int(yes(row.get("yellow_card"))) + int(yes(row.get("red_card"))) + int(yes(row.get("second_yellow_card")))
 
     teams_ranked = []
     for item in team_metrics.values():
@@ -386,11 +386,14 @@ def build():
     booking_rows = []
     cards_by_tournament = Counter()
     reds_by_tournament = Counter()
+    second_yellows_by_tournament = Counter()
+    yellows_by_tournament = Counter()
     for row in bookings:
         tid = row["tournament_id"]
-        meta = tournament_meta[tid]
         cards_by_tournament[tid] += 1
-        reds_by_tournament[tid] += num(row.get("red_card")) + num(row.get("second_yellow_card"))
+        yellows_by_tournament[tid] += int(yes(row.get("yellow_card")))
+        reds_by_tournament[tid] += int(yes(row.get("red_card")))
+        second_yellows_by_tournament[tid] += int(yes(row.get("second_yellow_card")))
     for meta in tournament_meta.values():
         booking_rows.append(
             {
@@ -399,7 +402,10 @@ def build():
                 "category": meta["category"],
                 "name": meta["name"],
                 "cards": cards_by_tournament[meta["id"]],
+                "yellows": yellows_by_tournament[meta["id"]],
                 "reds": reds_by_tournament[meta["id"]],
+                "second_yellows": second_yellows_by_tournament[meta["id"]],
+                "sendings_off": reds_by_tournament[meta["id"]] + second_yellows_by_tournament[meta["id"]],
             }
         )
 

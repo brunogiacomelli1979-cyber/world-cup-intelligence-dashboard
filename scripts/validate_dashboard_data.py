@@ -55,6 +55,13 @@ def main():
     if by_tournament_goals.get("2023 FIFA Women's World Cup") != 164:
         fail("2023 women's goal total should be 164")
 
+    red_cards = sum(row.get("reds", 0) for row in payload["bookings"])
+    second_yellows = sum(row.get("second_yellows", 0) for row in payload["bookings"])
+    if red_cards != 106:
+        fail(f"expected 106 direct red cards, got {red_cards}")
+    if second_yellows != 72:
+        fail(f"expected 72 second-yellow dismissals, got {second_yellows}")
+
     required_keys = ["tournaments", "teams", "scorers", "players", "biggest_matches", "dramatic_matches", "finals"]
     for key in required_keys:
         if not payload.get(key):

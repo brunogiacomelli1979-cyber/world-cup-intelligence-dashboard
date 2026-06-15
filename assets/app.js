@@ -277,7 +277,7 @@ function renderTeamPower(s) {
     series: [
       { name: "Títulos", type: "bar", stack: "total", data: rows.map(row => row.titles) },
       { name: "Vices", type: "bar", stack: "total", data: rows.map(row => row.runner_up) },
-      { name: "Vitórias/10", type: "bar", stack: "total", data: rows.map(row => Math.round(row.wins / 10)) }
+      { name: "Vitórias (÷10)", type: "bar", stack: "total", data: rows.map(row => +(row.wins / 10).toFixed(1)) }
     ]
   }, true);
 }
@@ -311,11 +311,21 @@ function renderCards(s) {
   if (!rows.length) return setEmpty("chartCards");
   chart("chartCards").setOption({
     ...baseGrid(),
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "#0b1724",
+      borderColor: "#315a80",
+      textStyle: { color: "#edf5ff" }
+    },
     xAxis: { ...baseGrid().xAxis, type: "category", data: rows.map(row => row.year) },
-    yAxis: { ...baseGrid().yAxis, type: "value" },
+    yAxis: [
+      { ...baseGrid().yAxis, type: "value", name: "Amarelos" },
+      { ...baseGrid().yAxis, type: "value", name: "Vermelhos" }
+    ],
     series: [
-      { name: "Cartões", type: "bar", data: rows.map(row => row.cards), barMaxWidth: 24 },
-      { name: "Vermelhos", type: "line", smooth: true, data: rows.map(row => row.reds) }
+      { name: "Amarelos", type: "bar", data: rows.map(row => row.yellows), barMaxWidth: 24 },
+      { name: "Vermelhos diretos", type: "line", smooth: true, yAxisIndex: 1, data: rows.map(row => row.reds) },
+      { name: "2º amarelo", type: "line", smooth: true, yAxisIndex: 1, data: rows.map(row => row.second_yellows) }
     ]
   }, true);
 }

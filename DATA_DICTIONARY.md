@@ -12,7 +12,7 @@ Este projeto usa os arquivos curados em `data/curated/` e gera um arquivo otimiz
 | `goals_curated.csv` | Gols, artilharia, gols por minuto, gols contra e pênaltis. |
 | `team_appearances_curated.csv` | Jogos, vitórias, empates, derrotas, gols pró, gols contra e saldo por seleção. |
 | `player_appearances_curated.csv` | Aparições, titularidades e base do índice de protagonismo. |
-| `bookings_curated.csv` | Cartões amarelos, vermelhos, segundos amarelos e disciplina por edição. |
+| `bookings_curated.csv` | Cartões amarelos, vermelhos diretos, segundos amarelos e disciplina por edição. |
 | `penalty_kicks_curated.csv` | Cobranças e conversões em disputas de pênaltis. |
 | `substitutions_curated.csv` | Volume de substituições por edição e contexto de uso futuro. |
 | `stadiums_curated.csv` | Estádios, cidades, países e capacidade. |
@@ -26,7 +26,7 @@ Este projeto usa os arquivos curados em `data/curated/` e gera um arquivo otimiz
 | Métrica | Definição |
 | --- | --- |
 | Gols por jogo | `gols / partidas` por edição. |
-| Cartões por jogo | `cartões / partidas` por edição. |
+| Cartões por jogo | `cartões / partidas` por edição, com amarelos, vermelhos diretos e segundos amarelos preservados separadamente. |
 | Aproveitamento | `vitórias / jogos` por seleção. |
 | Saldo de gols | `gols pró - gols contra` por seleção. |
 | Índice de drama | Soma ponderada de pênaltis, prorrogações, jogos eliminatórios com margem mínima e partidas com pelo menos cinco gols. |
